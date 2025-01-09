@@ -1,0 +1,122 @@
+# 1. Downloaded the Model from Tobias 
+
+# 2. Set Up a Virtual Environment
+python -m venv venv  # Create a virtual environment
+venv\Scripts\activate  # Activate on Windows
+
+# 3. Install Required Libraries
+pip install flask
+pip install flask-sqlalchemy  # SQLite support
+pip install numpy
+pip install scikit-learn
+pip install pandas
+pip install flask-wtf
+pip install email-validator
+
+# Removed: not needed for SQLite
+# pip install mysqlclient
+# pip install instamojo-wrapper
+
+# 4. SQLite Setup
+# SQLite doesn't need a separate server - it's built in!
+# The database will be created automatically as a file
+
+# 5. Config File Setup
+# Create config.json with this content:
+# -------------------------------------------------
+{
+    "params": {
+        "local_server": true,
+        "local_uri": "sqlite:///database.db"
+    }
+}
+# -------------------------------------------------
+
+# 6. Model Training Script (model_training.py)
+# -------------------------------------------------
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+import pickle
+
+# Load dataset
+df = pd.read_csv('heart.csv')
+X = df.drop('target', axis=1)
+y = df['target']
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train model
+model = DecisionTreeClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+# Evaluate model
+score = model.score(X_test, y_test)
+print(f"Model accuracy: {score}")
+
+# Save model
+with open('modal2.pkl', 'wb') as file:
+    pickle.dump(model, file)
+# -------------------------------------------------
+
+# 7. Database Initialization Script (init_db.py)
+# -------------------------------------------------
+from app import app, db, Admin
+
+with app.app_context():
+    # Create tables
+    db.create_all()
+    
+    # Create admin user
+    admin = Admin(Username="admin", Password="admin123")
+    db.session.add(admin)
+    db.session.commit()
+# -------------------------------------------------
+
+# 8. Start the App
+python app.py
+
+/doctorlogin - Doctor portal access
+/patientlogin - Patient portal access
+/admlogin - Admin portal access
+/patregis - New patient registration
+/docregis - New doctor registration
+
+Example doctor Registration:
+First Name: John
+Last Name: Smith
+Email: john.smith@doctor.com
+Phone: 7123456789
+Profession: Cardiologist
+Username: drsmith
+Password: doctor123
+
+Example patient Registration:
+
+First Name: Sarah
+Last Name: Johnson
+Email: sarah.j@patient.com
+Phone: 8987654321
+Profession: Teacher
+Username: sarahj
+Password: patient123
+
+# 9. Test Accounts
+# Go to http://localhost:5000/register
+# Create a test account with:
+# - First Name: Test
+# - Last Name: User
+# - Email: test@test.com
+# - Phone: 7894561230
+# - Profession: Student
+# - Username: testuser
+# - Password: test123
+
+# 10. Important Files Overview:
+# config.json - Configuration settings
+# app.py - Main Flask application
+# model_training.py - Script to train the ML model
+# init_db.py - Database initialization
+# database.db - SQLite database file (created automatically)
+# modal2.pkl - Trained model file
