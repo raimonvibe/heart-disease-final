@@ -1,8 +1,7 @@
-# 1. Downloaded the Model from Tobias 
 
 # 2. Set Up a Virtual Environment
-python -m venv venv  # Create a virtual environment
-venv\Scripts\activate  # Activate on Windows
+python -m venv venv  
+venv\Scripts\activate
 
 # 3. Install Required Libraries
 pip install flask
@@ -75,8 +74,10 @@ with app.app_context():
 # -------------------------------------------------
 
 # 8. Start the App
+python model_training.py
 python app.py
 
+# Adjust urls
 /doctorlogin - Doctor portal access
 /patientlogin - Patient portal access
 /admlogin - Admin portal access
