@@ -131,6 +131,23 @@ def dash():
     c22 = count2//2
     return render_template('dash.html',d = d,count=count,count1=count1,count2=count2,c22=c22)
  
+# adminlong 
+@app.route('/admlogin', methods=['GET', 'POST'])
+def adminlogin():
+    msg = ''
+    if request.method == 'POST':
+        uname = request.form.get('username', '')
+        passd = request.form.get('password', '')
+        admin = Admin.query.filter_by(Username=uname).first()
+
+        if admin and passd == admin.Password:  # Note: Insecure, passwords should be hashed
+            session['admin'] = uname
+            return redirect(url_for('dash'))  # Assuming 'dash' is the admin dashboard
+        else:
+            msg = 'Invalid Credentials'
+
+    return render_template('admlogin.html', msg=msg)
+
 
 @app.route('/patientlogin', methods=['GET', 'POST'])
 def patlog():
