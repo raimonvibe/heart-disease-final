@@ -295,7 +295,24 @@ def docpredict():
 
         # return render_template('heartcheck.html', Age=Age, Sex=Sex, Cp=Cp  , Trestbps=Trestbps , Fbs=Fbs , Restecg=Restecg, Thalach=Thalach, Exang=Exang, Oldpeak=Oldpeak , Slope=Slope , Ca=Ca , Thal=Thal )
 
- #Down here All Are CRUD Opreations oF Database--------------------------------------------------------------------------------------------------------------------------------
+ #Down here All Are CRUD Opreations oF Database-----
+
+# adminlong 
+@app.route('/adminlogin', methods=['GET', 'POST'])
+def adminlogin():
+    msg = ''
+    if request.method == 'POST':
+        uname = request.form.get('username', '')
+        passd = request.form.get('password', '')
+        admin = Admin.query.filter_by(Username=uname).first()
+        
+        if admin and passd == admin.Password:  # Note: Insecure, passwords should be hashed
+            session['admin'] = uname
+            return redirect(url_for('dash'))  # Assuming 'dash' is the admin dashboard
+        else:
+            msg = 'Invalid Credentials'
+    
+    return render_template('admin_login.html', msg=msg)---------------------------------------------------------------------------------------------------------------------------
 
 
 #Admin view all data of user--------------------------------------------------------------------------------------------
