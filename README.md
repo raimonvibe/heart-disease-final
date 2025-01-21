@@ -1,3 +1,5 @@
+This project is inspired by TobiasFire, credit goes out to him in the 1st place: https://github.com/Tobaisfire/Heart_Disease_Prediction-FLask-
+
 # Heart Disease Prediction System
 
 ## Overview
